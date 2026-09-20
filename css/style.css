@@ -47,14 +47,19 @@ body.tema-escuro {
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* rem é sempre relativo ao font-size do <html>, não do <body> —
+     por isso a escala de acessibilidade (A+/A-) precisa ficar aqui,
+     senão só o texto "solto" (sem classe própria) responde a ela. */
+  font-size: calc(16px * var(--fonte-escala));
+}
 
 body {
   margin: 0;
   background: var(--cor-fundo);
   color: var(--cor-texto);
   font-family: var(--fonte-texto);
-  font-size: calc(16px * var(--fonte-escala));
   line-height: 1.55;
   transition: background .2s ease, color .2s ease;
 }
