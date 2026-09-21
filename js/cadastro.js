@@ -34,6 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     campos.telefoneCelular.value = mascararTelefone(campos.telefoneCelular.value);
   });
 
+  campos.cep.addEventListener("input", () => {
+    campos.cep.value = mascararCEP(campos.cep.value);
+  });
+
   campos.cep.addEventListener("blur", async () => {
     const cepLimpo = campos.cep.value.replace(/\D/g, "");
     if (cepLimpo.length !== 8) return;
@@ -169,11 +173,22 @@ function mascararCPF(valor) {
 }
 
 function mascararTelefone(valor) {
-  const digitos = valor.replace(/\D/g, "").slice(0, 11);
-  if (digitos.length <= 2) return digitos.length ? `(+55)${digitos}` : "";
+  // remove o prefixo fixo "(+55)" ANTES de extrair os dígitos — senão o "55"
+  // dele é lido como se o usuário tivesse digitado, duplicando a cada tecla.
+  const semPrefixo = valor.replace(/^\(\+55\)/, "");
+  const digitos = semPrefixo.replace(/\D/g, "").slice(0, 11);
+  if (digitos.length === 0) return "";
+  if (digitos.length <= 2) return `(+55)${digitos}`;
   const ddd = digitos.slice(0, 2);
   const numero = digitos.slice(2);
   return `(+55)${ddd}-${numero}`;
+}
+
+function mascararCEP(valor) {
+  return valor
+    .replace(/\D/g, "")
+    .slice(0, 8)
+    .replace(/(\d{5})(\d)/, "$1-$2");
 }
 
 /* ---------- validação real do CPF (dígitos verificadores) ------------------- */
